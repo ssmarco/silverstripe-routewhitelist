@@ -23,12 +23,12 @@ class WhitelistGenerator extends SS_Object implements Flushable {
 			}
 		}
 		$filteredRules = array('home'); //add 'home' url, as default
-		
+
 		$addToWhitelist = Config::inst()->get('WhitelistGenerator', 'addToWhitelist');
 		if ($addToWhitelist && is_array($addToWhitelist)) {
 			$filteredRules = array_merge($filteredRules, $addToWhitelist);
 		}
-		
+
 		foreach($allTopLevelRules as $rule) {
 			if (strpos($rule, '$') !== false) {
 				if ($rule === '$Controller') {
@@ -94,7 +94,7 @@ class WhitelistGenerator extends SS_Object implements Flushable {
 		//create list of files to create
 		$toCreate = array();
 		foreach ($whitelist as $listItem){
-			if (!in_array($listItem, $whitelistFolderContents)) {
+			if ($whitelistFolderContents && !in_array($listItem, $whitelistFolderContents)) {
 				if (!empty($listItem)) {    //don't include empty files, such as the file for /
 					array_push($toCreate, $listItem);
 				}
@@ -137,7 +137,7 @@ class WhitelistGenerator extends SS_Object implements Flushable {
 		if (!class_exists($queryClass) && class_exists('SQLQuery')){
 			$queryClass = 'SQLQuery';
 		}
-		
+
 		$query = new $queryClass(
 			'DISTINCT (URLSegment)',
 			'SiteTree_versions',
